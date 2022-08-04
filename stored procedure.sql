@@ -61,12 +61,23 @@ select b.brandid,b.bname,c.firstname from brands as b full join celebrities as c
  exec sp_pro1
 
 
- create procedure sp_pro2
+-- create procedure sp_commonBrands
 as
 begin
-select bendorse.brandid,bendorse.celebid,b.bname from bendorse 
-right join brands as b
-on bendorse.celebid=b.celebid
+select b.bname as 'brands' from brands as b
+inner join endorsement as e
+on b.bid = e.bid
+group by(bname)
+having count(bname) > 1
+end
+create procedure sp_commonBrands
+as
+begin
+select b.bname as 'brands' from brands as b
+inner join bendorse as e
+on b.brandid = e.brandid
+group by(bname)
+having count(bname) > 1
 end
 
-exec sp_pro2
+exec sp_commonBrands
